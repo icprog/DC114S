@@ -1,0 +1,31 @@
+
+                        MICO MEMORY MAP                            
+|=================================================================|
+| MODULE                                   | ROM       | RAM      |
+|=================================================================|
+| App_moorgen-mico                         | 1708      | 818      |
+| aws.Cortex-M4F.GCC.release               | 20        | 4        |
+| Board_MK3080                             | 330       | 0        |
+| GCC                                      | 214       | 0        |
+| libc_nano                                | 16653     | 420      |
+| libgcc                                   | 2336      | 0        |
+| Lib_gpio_button_MK3080B                  | 224       | 200      |
+| Lib_JSON_C                               | 6750      | 12       |
+| Lib_MGKERNEL                             | 6811      | 2437     |
+| Lib_mgmqtt_client_c                      | 5253      | 9220     |
+| Lib_MGMQTT_SERVICE                       | 21879     | 2480     |
+| Lib_mgsys_c                              | 5209      | 385      |
+| Lib_MiCO_Kernel                          | 1663      | 16       |
+| Lib_MiCO_System                          | 16222     | 245      |
+| Lib_MOORGEN_SERVICE                      | 8204      | 5368     |
+| Lib_PRODUCT_c                            | 11758     | 1211     |
+| Lib_TLV_C                                | 1132      | 0        |
+| Lib_Utilities                            | 7612      | 0        |
+| MiCO_mocIP_Interface                     | 316       | 0        |
+| MiCO_mocOS_Interface                     | 883       | 8        |
+| mocSSL                                   | 88        | 0        |
+| MX1290                                   | 1531      | 972      |
+| *fill*                                   | 89        | 51       |
+|=================================================================|
+| TOTAL (bytes)                            | 116885    | 23847    |
+|=================================================================|

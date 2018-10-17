@@ -1,0 +1,6 @@
+1. build\moorgen-mico@MK3080B@moc\binary\moorgen-mico@MK3080B@moc.ota.bin
+
+	PS: 注意是 xxx.ota.bin文件上传到服务器
+
+
+2. 需要将文件名改成项目名+版本，如: DC114S_0.1.9.bin

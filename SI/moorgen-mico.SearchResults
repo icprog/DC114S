@@ -1,0 +1,7 @@
+---- dev_op_dp_report Matches (6 in 3 files) ----
+deviceObject.c (f:\dooya\moorgen-mico\moorgencloud\moorgenkernel):    dev_master_ob_p->dev_ops.dev_op_dp_report=devive_dp_report;
+mgKernel.h (f:\dooya\moorgen-mico\moorgencloud\moorgenkernel):    void  (*dev_op_dp_report)(DEVICE_TYPE type ,void *arg);
+Product.c (f:\dooya\moorgen-mico\product\dc114s):    if(master_ob.dev_ops.dev_op_dp_report!=NULL)
+Product.c (f:\dooya\moorgen-mico\product\dc114s):        master_ob.dev_ops.dev_op_dp_report(DEVICE_MASTER,(void *)&master_ob);
+Product.c (f:\dooya\moorgen-mico\product\dc114s):    if(master_ob.dev_ops.dev_op_dp_report!=NULL)
+Product.c (f:\dooya\moorgen-mico\product\dc114s):        master_ob.dev_ops.dev_op_dp_report(DEVICE_MASTER,(void *)&master_ob);

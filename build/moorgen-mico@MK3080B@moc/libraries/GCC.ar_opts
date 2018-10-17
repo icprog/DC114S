@@ -1,0 +1,1 @@
+./build/moorgen-mico@MK3080B@moc/Modules/mico-os/platform/GCC/mem_newlib.o ./build/moorgen-mico@MK3080B@moc/Modules/mico-os/platform/GCC/math_newlib.o ./build/moorgen-mico@MK3080B@moc/Modules/mico-os/platform/GCC/stdio_newlib.o ./build/moorgen-mico@MK3080B@moc/Modules/mico-os/platform/GCC/time_newlib.o ./build/moorgen-mico@MK3080B@moc/Modules/mico-os/platform/GCC/eabi.o  
