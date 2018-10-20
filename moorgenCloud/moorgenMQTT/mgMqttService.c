@@ -99,7 +99,7 @@ static int mqtt_device_activate_req()
     if(sysInfo->is_activate==1)
     {
         mqtt_status_set(mqtt_registered);
-        return;
+        return 0;
     }
     else
         mqtt_status_set(mqtt_registering);

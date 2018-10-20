@@ -17,7 +17,7 @@
 
 #include "mico.h"
 
-#define dev_log(M, ...)                    custom_log("dev", M, ##__VA_ARGS__)
+#define dev_log(M, ...)  custom_log("dev", M, ##__VA_ARGS__)
 
 typedef unsigned char   UINT8;
 typedef unsigned short  UINT16;

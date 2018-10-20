@@ -18,14 +18,14 @@
 | Lib_MiCO_Kernel                          | 1663      | 16       |
 | Lib_MiCO_System                          | 16222     | 245      |
 | Lib_MOORGEN_SERVICE                      | 8204      | 5368     |
-| Lib_PRODUCT_c                            | 11758     | 1211     |
+| Lib_PRODUCT_c                            | 12086     | 1211     |
 | Lib_TLV_C                                | 1132      | 0        |
 | Lib_Utilities                            | 7612      | 0        |
 | MiCO_mocIP_Interface                     | 316       | 0        |
 | MiCO_mocOS_Interface                     | 883       | 8        |
 | mocSSL                                   | 88        | 0        |
 | MX1290                                   | 1531      | 972      |
-| *fill*                                   | 89        | 51       |
+| *fill*                                   | 97        | 51       |
 |=================================================================|
-| TOTAL (bytes)                            | 116885    | 23847    |
+| TOTAL (bytes)                            | 117221    | 23847    |
 |=================================================================|

@@ -95,7 +95,7 @@ WMbvh/J6sBOHMq0Vn5G8Tp6iUwsRlY1z7LaQKAlnlOiiZVhhe+1gvzJBHC0t+Hr2\r\n\
 
 char mg_mqtt_server_ssl_cert_str[9216] ={
 "-----BEGIN CERTIFICATE-----\r\n\
-MIIEqjCCA5KgAwIBAgIQAnmsRYvBskWr+YBTzSybsTANBgkqhkiG9w0BAQsF\r\n\
+MIIEqjCCA5KgAwIBAgIQAnmsRYvBskWr+YBTzSybsTANBgkqhkiG9w0BAQsFADBh\r\n\
 MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3\r\n\
 d3cuZGlnaWNlcnQuY29tMSAwHgYDVQQDExdEaWdpQ2VydCBHbG9iYWwgUm9vdCBD\r\n\
 QTAeFw0xNzExMjcxMjQ2MTBaFw0yNzExMjcxMjQ2MTBaMG4xCzAJBgNVBAYTAlVT\r\n\

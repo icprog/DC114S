@@ -1,7 +1,131 @@
----- dev_op_dp_report Matches (6 in 3 files) ----
-deviceObject.c (f:\dooya\moorgen-mico\moorgencloud\moorgenkernel):    dev_master_ob_p->dev_ops.dev_op_dp_report=devive_dp_report;
-mgKernel.h (f:\dooya\moorgen-mico\moorgencloud\moorgenkernel):    void  (*dev_op_dp_report)(DEVICE_TYPE type ,void *arg);
-Product.c (f:\dooya\moorgen-mico\product\dc114s):    if(master_ob.dev_ops.dev_op_dp_report!=NULL)
-Product.c (f:\dooya\moorgen-mico\product\dc114s):        master_ob.dev_ops.dev_op_dp_report(DEVICE_MASTER,(void *)&master_ob);
-Product.c (f:\dooya\moorgen-mico\product\dc114s):    if(master_ob.dev_ops.dev_op_dp_report!=NULL)
-Product.c (f:\dooya\moorgen-mico\product\dc114s):        master_ob.dev_ops.dev_op_dp_report(DEVICE_MASTER,(void *)&master_ob);
+---- dev_status Matches (137 in 2 files) ----
+Product.c (f:\dooya\dc114s-mico\product\dc114s):extern DEVICE_STATUS    dev_status;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	if(dev_status.status==1)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	else if(dev_status.status==2)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	else if(dev_status.status==5)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dt72_dp->targetPosition= dev_status.targetPosition;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	if(dev_status.currentPosition<=100)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):		dt72_dp->currentPosition= dev_status.currentPosition;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	if(dev_status.currentPosition==0xff)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):		dt72_dp->direction= dev_status.direction;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dt72_dp->currentState = dev_status.currentState;		//journey
+Product.c (f:\dooya\dc114s-mico\product\dc114s):    if(dev_status.currentPosition==0xff)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):    	dev_status.targetPosition=targetPosition;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.app=1;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.direction = moorgen_sys_info.moorgen_des.direction;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.currentState = moorgen_sys_info.moorgen_des.currentState;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):		if(dev_status.targetPosition<=50)						// priority to up
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			MotorExe(dev_status.direction, isreversal);			//to     position   0
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			positionDiffer =  dev_status.targetPosition;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			MotorExe(dev_status.direction, isforward);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):				if((uint32_t)((float)(100 - dev_status.targetPosition)/100*B2T_t) >50)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):					mico_init_timer(&timer_handle,  (uint32_t)((float)(100 - dev_status.targetPosition)/100*B2T_t), MotorExeTimerCall, NULL);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):					MotorExe(dev_status.direction, isreversal);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			else if(dev_status.targetPosition == 100)		
+Product.c (f:\dooya\dc114s-mico\product\dc114s):				MotorExe(dev_status.direction, isforward);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			MotorExe(dev_status.direction, isforward);			//to     position  100
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			positionDiffer =  100 - dev_status.targetPosition;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			MotorExe(dev_status.direction, isreversal);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):				if((uint32_t)((float)(dev_status.targetPosition)/100*T2B_t) >50)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):					mico_init_timer(&timer_handle,  (uint32_t)((float)(dev_status.targetPosition)/100*T2B_t), MotorExeTimerCall, NULL);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):					MotorExe(dev_status.direction, isforward);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			else if(dev_status.targetPosition == 0)		
+Product.c (f:\dooya\dc114s-mico\product\dc114s):				MotorExe(dev_status.direction, isreversal);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):		dev_status.currentPosition = dev_status.targetPosition;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):		if(dev_status.currentPosition < dev_status.targetPosition)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			positionDiffer =  dev_status.targetPosition - dev_status.currentPosition;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			MotorExe(dev_status.direction, isforward);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):				T2B_t = (uint32_t)((float)dev_status.currentPosition/100*T2B_t) + offset;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):				if((uint32_t)((float)(100 - dev_status.targetPosition)/100*B2T_t) >50)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):					mico_init_timer(&timer_handle,  (uint32_t)((float)(100 - dev_status.targetPosition)/100*B2T_t), MotorExeTimerCall, NULL);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):					MotorExe(dev_status.direction, isreversal);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			else if(dev_status.targetPosition == 100)		
+Product.c (f:\dooya\dc114s-mico\product\dc114s):				MotorExe(dev_status.direction, isforward);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			positionDiffer =  dev_status.currentPosition - dev_status.targetPosition; 
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			MotorExe(dev_status.direction, isreversal);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):				B2T_t = (uint32_t)((float)(100 - dev_status.currentPosition)/100*B2T_t )+ offset;		//dev_status.currentPosition  != 0
+Product.c (f:\dooya\dc114s-mico\product\dc114s):				if((uint32_t)((float)( dev_status.targetPosition)/100*T2B_t) >50)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):					mico_init_timer(&timer_handle,  (uint32_t)((float)( dev_status.targetPosition )/100*T2B_t), MotorExeTimerCall, NULL);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):					MotorExe(dev_status.direction, isforward);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):			else if(dev_status.targetPosition == 0)		
+Product.c (f:\dooya\dc114s-mico\product\dc114s):				MotorExe(dev_status.direction, isreversal);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):		dev_status.currentPosition = dev_status.targetPosition;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	moorgen_sys_info.moorgen_des.currentPostion = dev_status.targetPosition;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	moorgen_sys_info.moorgen_des.targetPostion = dev_status.targetPosition;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):   	dev_status.targetPosition=0;
+Product.c (f:\dooya\dc114s-mico\product\dc114s)://	dev_status.app=1;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.status = 1;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.direction = moorgen_sys_info.moorgen_des.direction;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	MotorExe(dev_status.direction, isreversal);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.currentPosition = 0;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.targetPosition=100;
+Product.c (f:\dooya\dc114s-mico\product\dc114s)://   	 dev_status.app=1;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.status = 2;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.direction = moorgen_sys_info.moorgen_des.direction;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	MotorExe(dev_status.direction, isforward);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.currentPosition = 100;
+Product.c (f:\dooya\dc114s-mico\product\dc114s)://	dev_status.currentState = 0;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	if(dev_status.direction == 0)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):		dev_status.direction  = 1;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	else if(dev_status.direction == 1 )
+Product.c (f:\dooya\dc114s-mico\product\dc114s):		dev_status.direction = 0;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	moorgen_sys_info.moorgen_des.direction = dev_status.direction;
+Product.c (f:\dooya\dc114s-mico\product\dc114s)://	dev_status.app=1;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.status = 0;		//pause
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	MotorExe(dev_status.direction, isstop);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.direction = moorgen_sys_info.moorgen_des.direction;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	MotorExe(dev_status.direction, isforward);		//isforward
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	MotorExe(dev_status.direction, isreversal);		//isreversal
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	MotorExe(dev_status.direction, isforward);		//isforward
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	 dev_status.currentPosition = 100;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.targetPosition = 100;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	 dev_status.currentState = 3;
+Product.c (f:\dooya\dc114s-mico\product\dc114s)://	dev_status.status = moorgen_sys_info.moorgen_des.status;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.direction = moorgen_sys_info.moorgen_des.direction;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	MotorExe(dev_status.direction, isforward);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	MotorExe(dev_status.direction, isstop);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	dev_status.direction = moorgen_sys_info.moorgen_des.direction;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	MotorExe(dev_status.direction, isreversal);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	MotorExe(dev_status.direction, isstop);
+Product.c (f:\dooya\dc114s-mico\product\dc114s):   else if(dt72_dp->direction != dev_status.direction)
+Product.c (f:\dooya\dc114s-mico\product\dc114s):		dev_status.direction = dt72_dp->direction;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):		moorgen_sys_info.moorgen_des.direction = dev_status.direction;
+Product.c (f:\dooya\dc114s-mico\product\dc114s):	MotorExe(dev_status.direction,isstop);
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):DEVICE_STATUS    dev_status;
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    if(dev_status.currentPosition!=data[loc])
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):        dev_status.currentPosition=data[loc];
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    if(dev_status.direction!=data[loc])
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):        dev_status.direction=data[loc];
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    if(dev_status.manual!=data[loc])
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):        dev_status.manual=data[loc];
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):            if(dev_status.status!=0)
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):                if(dev_status.currentPosition<=100)
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):                    dev_status.targetPosition=dev_status.currentPosition;
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):                dev_status.status=0;
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):                dev_status.app=0;
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):        if(dev_status.status!=data[loc])
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):            dev_status.status=data[loc];
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):            if(dev_status.app==0)
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):                if(dev_status.status==0x01)
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):                    dev_status.targetPosition=100;
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):                else if(dev_status.status==0x02)
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):                    dev_status.targetPosition=0;
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    if(dev_status.angle!=data[loc])
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):        dev_status.angle=data[loc];
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    if(dev_status.angleDirection!=data[loc])
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):        dev_status.angleDirection=data[loc];
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    if(dev_status.anglePara!=data[loc])
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):        dev_status.anglePara=data[loc];
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    if(dev_status.trip!=data[loc])
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):        dev_status.trip=data[loc];
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    dev_log("targetPosition:%d\n",dev_status.targetPosition);
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    dev_log("currentPosition:%d\n",dev_status.currentPosition);
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    dev_log("direction:%d\n",dev_status.direction);
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    dev_log("manual:%d\n",dev_status.manual);
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    dev_log("status:%d\n",dev_status.status);
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    dev_log("angle:%d\n",dev_status.angle);
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    dev_log("anglePara:%d\n",dev_status.anglePara);
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    dev_log("res:%d\n",dev_status.res);
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    dev_log("trip:%d\n",dev_status.trip);
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    dev_status.type=type;
+uartProtocol.c (f:\dooya\dc114s-mico\product\dc114s):    memset(&dev_status,0,sizeof(DEVICE_STATUS));
