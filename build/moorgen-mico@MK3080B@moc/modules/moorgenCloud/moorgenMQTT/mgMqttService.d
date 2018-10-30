@@ -119,4 +119,4 @@ build/moorgen-mico@MK3080B@moc/Modules//moorgenCloud/moorgenMQTT/mgMqttService.o
  mico-os/libraries/utilities/./URLUtils.h \
  mico-os/libraries/utilities/./SocketUtils.h \
  mico-os/libraries/utilities/./StringUtils.h \
- moorgenCloud/moorgenService/./mgBase64.h
+ moorgenCloud/moorgenService/./mgBase64.h product/DC114S/./product.h

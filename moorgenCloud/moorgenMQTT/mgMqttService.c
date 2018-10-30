@@ -7,6 +7,7 @@
 #include "SocketUtils.h"
 #include "StringUtils.h"
 #include "mgBase64.h"
+#include "product.h"
 
 #define MQTT_ASTIME_FLUSH_TIME  17280
 
@@ -925,7 +926,7 @@ static void mqtt_recv_message_thread( mg_thread_arg_t arg )
 
     while(1)
     {
-
+	mqtt_log("******doing recv thread********");
         err=mg_rtos_pop_from_queue( &mqtt_service.mqtt_msg_recv_queue, &mqtt_packet_recv_p,MG_WAIT_FOREVER);
 //		mqtt_log("mqtt_recv_message_thread 2\r\n");
 
@@ -1190,7 +1191,15 @@ static void mqtt_message_callback( MessageData* md )
 	require(mqtt_packet_recv_p != NULL, TLV_ERROR);
 
 
-	mqtt_log("*******mqtt_packet_recv_p : %s***********",mqtt_packet_recv_p->content_data);
+	mqtt_log("*******mqtt_packet_recv_p : msgType: %d, %s***********",mqtt_packet_recv_p->msgType,mqtt_packet_recv_p->content_data);
+	if(mqtt_packet_recv_p->msgType == MQTT_MSGTYPE_DEVICE_CONTROL)
+	{
+		if(strstr((char *)mqtt_packet_recv_p->content_data,"\"operation\":2") != 0)
+		{
+			mqtt_log("do pause");
+			curtainPauseSet();
+		}
+	}
 	err = mg_rtos_push_to_queue(&(mqtt_service.mqtt_msg_recv_queue), &mqtt_packet_recv_p, 500);
 	if(err != kNoErr)
 	{

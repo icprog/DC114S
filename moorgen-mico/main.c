@@ -105,22 +105,22 @@ int application_start( void )
 
     mg_mico_system_init(mico_system_context_init(9216));	//storage  certificate 
     mg_os_init();
-	
-    mg_eeprom_read(SYSTEM_EE_ADDR,(uint8_t *)&moorgen_sys_info.moorgen_des,sizeof(MOORGEN_DES_S));	
-    app_log("currentPostion = %d, targetPostion =%d",moorgen_sys_info.moorgen_des.currentPostion, moorgen_sys_info.moorgen_des.targetPostion);
-    app_log("journey set %d", moorgen_sys_info.moorgen_des.currentState);
-   /* Whether to conduct factory test */
-   FactoryTest();
 
-    moorgen_service_init(CONFIG_FACTORY,CONFIG_PRODUCT,CONFIG_DEVICE_TYPE,CONFIG_VERSION);
-    product_init();
-
-//mg_eeprom_read(SYSTEM_EE_ADDR,(uint8_t *)&moorgen_sys_info.moorgen_des,sizeof(MOORGEN_DES_S));		
-//app_log("BtoT_t = %ld , TtoB_t  = %ld \r\n", moorgen_sys_info.moorgen_des.journey_up, moorgen_sys_info.moorgen_des.journey_down);
-    mg_wifi_start();
+/* Whether to conduct factory test */
+    FactoryTest();
 
     mico_rtos_create_thread( KeyScanHandle, MICO_APPLICATION_PRIORITY, "Key_Scan", KeyScan_thread, KeyScan_STK_SIZE, 0 );
     mico_rtos_create_thread( MotorScanHandle, MICO_APPLICATION_PRIORITY, "Motor_Scan", MotorScan_thread, MotorScan_STK_SIZE, 0 );
+/*	
+    mg_eeprom_read(SYSTEM_EE_ADDR,(uint8_t *)&moorgen_sys_info.moorgen_des,sizeof(MOORGEN_DES_S));	
+    app_log("currentPostion = %d, targetPostion =%d",moorgen_sys_info.moorgen_des.currentPostion, moorgen_sys_info.moorgen_des.targetPostion);
+    app_log("journey set %d", moorgen_sys_info.moorgen_des.currentState);
+*/ 
+    moorgen_service_init(CONFIG_FACTORY,CONFIG_PRODUCT,CONFIG_DEVICE_TYPE,CONFIG_VERSION);
+    product_init();
+
+    mg_wifi_start();
+
     moorgen_service_start();
 
 //    while(1);

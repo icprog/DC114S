@@ -3,6 +3,13 @@
 
 
 #include <stdint.h>
+/*
+*	0：433单向
+*	1：433双向有行程电机
+*	2：433双向无行程电机
+*	3：其他有行程电机机(如wifi管状电机)
+*/
+#define Product_wirelessMode		3
 
 #define DP_OPERATION    "operation"
 #define DP_CURRENT_POS  "currentPosition"
@@ -10,6 +17,7 @@
 #define DP_DIRECTION    "direction"
 #define DP_CURRENT_STATE	"currentState"
 #define curWifiRssi	"RSSI"
+#define wirelessMode	"wirelessMode"
 
 
 typedef struct tagDT72_DP{
@@ -50,6 +58,7 @@ typedef enum
 	MAX_DP_DIRECTION
 } dt72_allow_direction;
 
+void curtainPauseSet();
 void curtainMsgReport();
 void product_init();
 void product_led_set(int led_status );

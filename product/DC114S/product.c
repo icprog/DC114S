@@ -22,15 +22,14 @@ uint8_t Pause_Flag = 0;
 void curatin_device_report()
 {
     DT72_DP *dt72_dp=(DT72_DP *)master_ob.devDP;
-	
-	if(dev_status.status==1)
+
+	if(dev_status.status == 0)
+		dt72_dp->operation = DP_OPS_CLOSE_CURTAIN;
+	else if(dev_status.status==1)
 		dt72_dp->operation= DP_OPS_OPEN_CURTAIN;
 	else if(dev_status.status==2)
-		dt72_dp->operation = DP_OPS_CLOSE_CURTAIN;
-	else if(dev_status.status==5)
-		dt72_dp->operation = DP_OPS_REPORT;
-	else
 		dt72_dp->operation = DP_OPS_PAUSE_CURTAIN;
+
 
 	dt72_dp->targetPosition= dev_status.targetPosition;
 
@@ -104,10 +103,12 @@ void curtainTargetPositionSet(UINT8 targetPosition)
 		if(dev_status.targetPosition<=50)						// priority to up
 		{	
 			MotorExe(dev_status.direction, isreversal);			//to     position   0
+			dev_status.status = 1;
 			while(RunStatus != 0)
 			{
 				mico_rtos_delay_milliseconds(50);
 			}
+			dev_status.status = 2;
 			dev_log("is reach top");
 			positionDiffer =  dev_status.targetPosition;
 			timer_flag = 0;
@@ -117,12 +118,14 @@ void curtainTargetPositionSet(UINT8 targetPosition)
 			tmp1 = mico_rtos_get_time();
 			dev_log("right away forward");
 			MotorExe(dev_status.direction, isforward);
+			dev_status.status = 0;
 			err = mico_start_timer(&timer_handle);
 			require_noerr(err,exit);
 			while(( RunStatus != 0) && (timer_flag == 0))		//wait  for stop
 			{
 				mico_rtos_delay_milliseconds(50);
 			}
+			dev_status.status = 2;
 			tmp2 = mico_rtos_get_time();
 			if(timer_flag != 1)			
 			{
@@ -135,19 +138,23 @@ void curtainTargetPositionSet(UINT8 targetPosition)
 			//		timer_flag = 0;
 					mico_init_timer(&timer_handle,  (uint32_t)((float)(100 - dev_status.targetPosition)/100*B2T_t), MotorExeTimerCall, NULL);
 					MotorExe(dev_status.direction, isreversal);
+					dev_status.status = 1;
 					mico_start_timer(&timer_handle);
 					mico_rtos_get_semaphore( &MotorExe_sem, MICO_WAIT_FOREVER );
 					timer_flag = 0;
+					dev_status.status = 2;
 				}
 			}
 			else if(dev_status.targetPosition == 100)		
 			{
 				tmp1 = mico_rtos_get_time();
 				MotorExe(dev_status.direction, isforward);
+				dev_status.status = 0;
 				while(RunStatus != 0)
 				{
 					mico_rtos_delay_milliseconds(50);
 				}
+				dev_status.status = 2;
 				tmp2 = mico_rtos_get_time();
 				offset = tmp2 -tmp1;
 				T2B_t +=offset;
@@ -158,10 +165,12 @@ void curtainTargetPositionSet(UINT8 targetPosition)
 		else			//targetPosition > 50
 		{
 			MotorExe(dev_status.direction, isforward);			//to     position  100
+			dev_status.status = 0;
 			while(RunStatus != 0)
 			{
 				mico_rtos_delay_milliseconds(50);
 			}
+			dev_status.status = 2;
 			dev_log("is reach bottom");
 			positionDiffer =  100 - dev_status.targetPosition;
 			timer_flag = 0;
@@ -171,12 +180,14 @@ void curtainTargetPositionSet(UINT8 targetPosition)
 			tmp1 = mico_rtos_get_time();
 			dev_log("right away reverse");
 			MotorExe(dev_status.direction, isreversal);
+			dev_status.status = 1;
 			err = mico_start_timer(&timer_handle);
 			require_noerr(err,exit);
 			while(( RunStatus != 0) && (timer_flag == 0))		//wait  for stop
 			{
 				mico_rtos_delay_milliseconds(50);
 			}
+			dev_status.status = 2;
 			tmp2 = mico_rtos_get_time();
 			if(timer_flag != 1)			
 			{
@@ -189,19 +200,23 @@ void curtainTargetPositionSet(UINT8 targetPosition)
 			//		timer_flag = 0;
 					mico_init_timer(&timer_handle,  (uint32_t)((float)(dev_status.targetPosition)/100*T2B_t), MotorExeTimerCall, NULL);
 					MotorExe(dev_status.direction, isforward);
+					dev_status.status = 0;
 					mico_start_timer(&timer_handle);
 					mico_rtos_get_semaphore( &MotorExe_sem, MICO_WAIT_FOREVER );
 					timer_flag = 0;
+					dev_status.status = 2;
 				}
 			}
 			else if(dev_status.targetPosition == 0)		
 			{
 				tmp1 = mico_rtos_get_time();
 				MotorExe(dev_status.direction, isreversal);
+				dev_status.status = 1;
 				while(RunStatus != 0)
 				{
 					mico_rtos_delay_milliseconds(50);
 				}
+				dev_status.status = 2;
 				tmp2 = mico_rtos_get_time();
 				offset = tmp2 -tmp1;
 				B2T_t +=offset;
@@ -223,12 +238,14 @@ void curtainTargetPositionSet(UINT8 targetPosition)
 			require_noerr(err,exit);
 			tmp1 = mico_rtos_get_time();
 			MotorExe(dev_status.direction, isforward);
+			dev_status.status = 0;
 			err = mico_start_timer(&timer_handle);
 			require_noerr(err,exit);
 			while(( RunStatus != 0) && (timer_flag == 0))		//wait  for stop
 			{
 				mico_rtos_delay_milliseconds(50);
 			}
+			dev_status.status = 2;
 			tmp2 = mico_rtos_get_time();
 			if(timer_flag != 1)			
 			{
@@ -242,19 +259,23 @@ void curtainTargetPositionSet(UINT8 targetPosition)
 			//		timer_flag = 0;
 					mico_init_timer(&timer_handle,  (uint32_t)((float)(100 - dev_status.targetPosition)/100*B2T_t), MotorExeTimerCall, NULL);
 					MotorExe(dev_status.direction, isreversal);
+					dev_status.status = 1;
 					mico_start_timer(&timer_handle);
 					mico_rtos_get_semaphore( &MotorExe_sem, MICO_WAIT_FOREVER );
 					timer_flag = 0;
+					dev_status.status = 2;
 				}
 			}
 			else if(dev_status.targetPosition == 100)		
 			{
 				tmp1 = mico_rtos_get_time();
 				MotorExe(dev_status.direction, isforward);
+				dev_status.status = 0;
 				while(RunStatus != 0)
 				{
 					mico_rtos_delay_milliseconds(50);
 				}
+				dev_status.status = 2;
 				tmp2 = mico_rtos_get_time();
 				offset = tmp2 -tmp1;
 				T2B_t +=offset;
@@ -269,12 +290,14 @@ void curtainTargetPositionSet(UINT8 targetPosition)
 			require_noerr(err,exit);
 			tmp1 = mico_rtos_get_time();
 			MotorExe(dev_status.direction, isreversal);
+			dev_status.status = 1;
 			err = mico_start_timer(&timer_handle);
 			require_noerr(err,exit);
 			while(( RunStatus != 0) && (timer_flag == 0))		//wait  for stop
 			{
 				mico_rtos_delay_milliseconds(50);
 			}
+			dev_status.status = 2;
 			tmp2 = mico_rtos_get_time();
 			if(timer_flag != 1)			
 			{
@@ -288,19 +311,23 @@ void curtainTargetPositionSet(UINT8 targetPosition)
 				//	timer_flag = 0;
 					mico_init_timer(&timer_handle,  (uint32_t)((float)( dev_status.targetPosition )/100*T2B_t), MotorExeTimerCall, NULL);
 					MotorExe(dev_status.direction, isforward);
+					dev_status.status = 0;
 					mico_start_timer(&timer_handle);
 					mico_rtos_get_semaphore( &MotorExe_sem, MICO_WAIT_FOREVER );
 					timer_flag = 0;
+					dev_status.status = 2;
 				}
 			}
 			else if(dev_status.targetPosition == 0)		
 			{
 				tmp1 = mico_rtos_get_time();
 				MotorExe(dev_status.direction, isreversal);
+				dev_status.status = 1;
 				while(RunStatus != 0)
 				{
 					mico_rtos_delay_milliseconds(50);
 				}
+				dev_status.status = 2;
 				tmp2 = mico_rtos_get_time();
 				offset = tmp2 -tmp1;
 				B2T_t +=offset;
@@ -345,15 +372,15 @@ void curtainOpenSet()
 		Pause_Flag = 0;
 		return ;
 	}
-	dev_log("Open complete");
 	moorgen_sys_info.moorgen_des.currentPostion = 0;
 	moorgen_sys_info.moorgen_des.targetPostion = 0;
-	moorgen_sys_info.moorgen_des.status = 1;
+	moorgen_sys_info.moorgen_des.status = 2;
 
 	mg_eeprom_write(SYSTEM_EE_ADDR,(uint8_t *)&moorgen_sys_info.moorgen_des,sizeof(MOORGEN_DES_S));
 	 
-	
+	dev_status.status = 2;
 	dev_status.currentPosition = 0;
+//	dev_status.currentState = 0;
 
 	curatin_device_report();
 }
@@ -364,7 +391,7 @@ void curtainCloseSet()
 	dev_status.targetPosition=100;
 //   	 dev_status.app=1;
 
-	dev_status.status = 2;
+	dev_status.status = 0;		//0
 
 	mg_eeprom_read(SYSTEM_EE_ADDR,(uint8_t *)&moorgen_sys_info.moorgen_des,sizeof(MOORGEN_DES_S));
 	dev_status.direction = moorgen_sys_info.moorgen_des.direction;
@@ -383,15 +410,15 @@ void curtainCloseSet()
 		Pause_Flag = 0;
 		return ;
 	}
-	dev_log("Close complete");
 	moorgen_sys_info.moorgen_des.currentPostion = 100;
 	moorgen_sys_info.moorgen_des.targetPostion = 100;
 	moorgen_sys_info.moorgen_des.status = 2;
 
 	mg_eeprom_write(SYSTEM_EE_ADDR,(uint8_t *)&moorgen_sys_info.moorgen_des,sizeof(MOORGEN_DES_S));
-	 
+
+	 dev_status.status = 2;
 	dev_status.currentPosition = 100;
-//	dev_status.currentState = 0;
+//	dev_status.currentState = 0;			
 
 	curatin_device_report();
 }
@@ -411,15 +438,14 @@ void curtainDirectionSet()
 /* add stop handler */
 void curtainPauseSet()
 {
-//	dev_status.app=1;
+	dev_status.app=1;		//
 	
-	dev_status.status = 0;		//pause
+	dev_status.status = 0;		//pause  2
 
-	
 	MotorExe(dev_status.direction, isstop);
 	Pause_Flag  = 1;
 
-	moorgen_sys_info.moorgen_des.status = 0;
+	moorgen_sys_info.moorgen_des.status = 2;
 	mg_eeprom_write(SYSTEM_EE_ADDR,(uint8_t *)&moorgen_sys_info.moorgen_des,sizeof(MOORGEN_DES_S));
 
 	curatin_device_report();
@@ -432,26 +458,32 @@ void curtainJourneySet()
 	mg_eeprom_read(SYSTEM_EE_ADDR,(uint8_t *)&moorgen_sys_info.moorgen_des,sizeof(MOORGEN_DES_S));
 	dev_status.direction = moorgen_sys_info.moorgen_des.direction;
 	MotorExe(dev_status.direction, isforward);		//isforward
+	dev_status.status = 0;
 	while(RunStatus != 0)						//Wait until the motor reaches the bottom
 	{
 		mico_rtos_delay_milliseconds(50);
 	}
+	dev_status.status = 2;
 	tmp1 = mico_rtos_get_time();					//require  system time(uint: ms)
 	MotorExe(dev_status.direction, isreversal);		//isreversal
+	dev_status.status = 1;
 	while(RunStatus != 0)						//Wait until the motor reaches the top
 	{
 		mico_rtos_delay_milliseconds(5);
 	}
+	dev_status.status = 2;
 	tmp2 = mico_rtos_get_time();
 	BtoT_t = tmp2 -tmp1;
-
+	dev_status.status = 2;
 	dev_log("BtoT_t = %ld\r\n",BtoT_t);
 
 	MotorExe(dev_status.direction, isforward);		//isforward
+	dev_status.status = 0;
 	while(RunStatus != 0)
 	{
 		mico_rtos_delay_milliseconds(5);
 	}
+	dev_status.status = 2;
 	tmp1 = mico_rtos_get_time();
 
 	TtoB_t = tmp1 - tmp2;
@@ -485,7 +517,7 @@ void curtainMsgReport()
 	report_dev_status.direction = moorgen_sys_info.moorgen_des.direction;
 	report_dev_status.currentState =moorgen_sys_info.moorgen_des.currentState;
 //	dev_status.status = moorgen_sys_info.moorgen_des.status;
-	report_dev_status.status = DP_OPS_REPORT;
+	report_dev_status.status = dev_status.status;
 
 //REPORT:
     	DT72_DP *dt72_dp=(DT72_DP *)master_ob.devDP;
@@ -494,11 +526,9 @@ void curtainMsgReport()
 	if(report_dev_status.status==1)
 		dt72_dp->operation= DP_OPS_OPEN_CURTAIN;
 	else if(report_dev_status.status==2)
-		dt72_dp->operation = DP_OPS_CLOSE_CURTAIN;
-	else if(report_dev_status.status==5)
-		dt72_dp->operation = DP_OPS_REPORT;
-	else
 		dt72_dp->operation = DP_OPS_PAUSE_CURTAIN;
+	else
+		dt72_dp->operation = DP_OPS_CLOSE_CURTAIN;
 
 	dt72_dp->targetPosition= report_dev_status.targetPosition;
 
@@ -527,10 +557,12 @@ void curtainPointMoveDn()
 	dev_status.direction = moorgen_sys_info.moorgen_des.direction;
 
 	MotorExe(dev_status.direction, isforward);
+	dev_status.status = 0;
 
 	mico_rtos_delay_milliseconds(500);
 
 	MotorExe(dev_status.direction, isstop);
+	dev_status.status = 2;
 }
 
 void curtainPointMoveUp()
@@ -539,10 +571,12 @@ void curtainPointMoveUp()
 	dev_status.direction = moorgen_sys_info.moorgen_des.direction;
 
 	MotorExe(dev_status.direction, isreversal);
+	dev_status.status = 1;
 
 	mico_rtos_delay_milliseconds(500);
 
 	MotorExe(dev_status.direction, isstop);
+	dev_status.status = 2;
 }
 void dt72_dp_ctrl(DEVICE_TYPE type ,void *arg,void *dp)
 {
@@ -567,17 +601,13 @@ void dt72_dp_ctrl(DEVICE_TYPE type ,void *arg,void *dp)
         {
         	case DP_OPS_CLOSE_CURTAIN:
 			dev_log("DP_OPS_CLOSE_CURTAIN\r\n");	
-   			curtainCloseSet(CLOSE_ADDR,NULL,0);
+   			curtainCloseSet();
   			break;
         	case DP_OPS_OPEN_CURTAIN:
 			dev_log("DP_OPS_OPEN_CURTAIN\r\n");		
-            		curtainOpenSet(OPEN_ADDR,NULL,0);
+            		curtainOpenSet();
             		break;
-        	case DP_OPS_PAUSE_CURTAIN:
-			dev_log("DP_OPS_PAUSE_CURTAIN\r\n");
-           		curtainPauseSet();				
-            		break;
-       	 case DP_OPS_REVERSE:
+       	 	case DP_OPS_REVERSE:
 			dev_log("DP_OPS_REVERSE\r\n");	
            		curtainDirectionSet();
 			break;
@@ -655,7 +685,8 @@ void dt72_dp_to_json(char  *devType,void *dp,void *json)
 	}
 	if(ret>0)
 		json_object_object_add(dp_json_ob, curWifiRssi, json_object_new_int(wifiLinkStatus.rssi));
-  
+
+  	json_object_object_add(dp_json_ob, wirelessMode, json_object_new_int(Product_wirelessMode));
 }
 
 
